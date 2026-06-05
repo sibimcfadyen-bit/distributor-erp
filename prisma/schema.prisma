@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  OWNER
+  ACCOUNTANT
+  GODOWN
+  SALESMAN
+  DELIVERY
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Route {
+  id        String   @id @default(uuid())
+  name      String
+
+  shops     Shop[]
+
+  createdAt DateTime @default(now())
+}
+
+model Shop {
+  id         String   @id @default(uuid())
+  shopName   String
+  ownerName  String
+  mobile     String
+
+  address    String?
+  latitude   Float?
+  longitude  Float?
+
+  routeId    String
+  route      Route @relation(fields: [routeId], references: [id])
+
+  createdAt  DateTime @default(now())
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  sku             String   @unique
+  name            String
+
+  hsnCode         String
+  gst             Float
+
+  caseSize        Int
+
+  mrp             Float
+  distributorRate Float
+  retailerRate    Float
+
+  reorderLevel    Int
+  
+  shelfLifeDays   Int?
+
+  trackBatch      Boolean  @default(true)
+  trackMfgDate    Boolean  @default(true)
+
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+}
