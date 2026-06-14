@@ -17,63 +17,65 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      UserRole
+  id       String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  role     UserRole
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Route {
-  id        String   @id @default(uuid())
-  name      String
+  id   String @id @default(uuid())
+  name String
 
-  shops     Shop[]
+  shops Shop[]
 
   createdAt DateTime @default(now())
 }
 
 model Shop {
-  id         String   @id @default(uuid())
-  shopName   String
-  ownerName  String
-  mobile     String
+  id        String @id @default(uuid())
+  shopName  String
+  ownerName String
+  mobile    String
 
-  address    String?
-  latitude   Float?
-  longitude  Float?
+  address   String?
+  latitude  Float?
+  longitude Float?
 
-  routeId    String
-  route      Route @relation(fields: [routeId], references: [id])
+  routeId String
+  route   Route  @relation(fields: [routeId], references: [id])
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Product {
-  id              String   @id @default(uuid())
-  sku             String   @unique
-  name            String
+  id   String @id @default(uuid())
+  sku  String @unique
+  name String
 
-  hsnCode         String
-  gst             Float
+  hsnCode String
+  gst     Float
 
-  caseSize        Int
+  caseSize Int
 
   mrp             Float
   distributorRate Float
   retailerRate    Float
 
-  reorderLevel    Int
-  
-  shelfLifeDays   Int?
+  reorderLevel Int
 
-  trackBatch      Boolean  @default(true)
-  trackMfgDate    Boolean  @default(true)
+  shelfLifeDays Int?
 
-  isActive        Boolean  @default(true)
+  trackBatch   Boolean @default(true)
+  trackMfgDate Boolean @default(true)
 
-  createdAt       DateTime @default(now())
+  imageUrl String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
 }
