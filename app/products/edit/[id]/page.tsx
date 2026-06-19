@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import EditProductForm from "@/components/EditProductForm";
+import EditProductForm from "@/components/product/EditProductForm";
 
 export default async function EditProductPage({
   params,

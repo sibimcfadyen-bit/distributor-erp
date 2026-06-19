@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { uploadImage } from "@/lib/uploadImage";
 import { useState } from "react";
 
 interface Product {
@@ -46,6 +47,7 @@ export default function EditProductForm({
   });
 
   const router = useRouter();
+  const [imagePreview, setImagePreview] = useState("");
 
   const updateProduct = async () => {
     const response = await fetch(
@@ -98,16 +100,24 @@ export default function EditProductForm({
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
+              onChange={async (e) => {
                 const file = e.target.files?.[0];
 
-                if (file) {
-                  const imagePath = `/products/${file.name}`;
+                if (!file) return;
+
+                try {
+                  const imageUrl = await uploadImage(file);
 
                   setFormData({
                     ...formData,
-                    imageUrl: imagePath,
+                    imageUrl,
                   });
+
+                  setImagePreview(URL.createObjectURL(file));
+                } catch (error) {
+                  console.error(error);
+
+                  alert("Image upload failed");
                 }
               }}
             />

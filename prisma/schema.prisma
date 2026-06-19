@@ -28,10 +28,12 @@ model User {
 }
 
 model Route {
-  id   String @id @default(uuid())
-  name String
+  id        String   @id @default(uuid())
+  name      String
 
-  shops Shop[]
+  isActive  Boolean  @default(true)
+
+  shops     Shop[]
 
   createdAt DateTime @default(now())
 }
