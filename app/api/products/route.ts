@@ -30,6 +30,7 @@ export async function POST(req: Request) {
         : null,
       trackBatch: body.trackBatch,
       trackMfgDate: body.trackMfgDate,
+      imageUrl: body.imageUrl,
       isActive: true,
     },
   });

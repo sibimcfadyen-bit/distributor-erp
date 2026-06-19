@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function ProductForm() {
@@ -16,6 +17,7 @@ export default function ProductForm() {
     shelfLifeDays: "",
     trackBatch: true,
     trackMfgDate: true,
+    imageUrl: "",
     isActive: true,
   });
 
@@ -29,7 +31,10 @@ export default function ProductForm() {
     distributorRate: "",
     retailerRate: "",
     reorderLevel: "",
+    imageUrl: "",
   });
+
+  const router = useRouter();
 
   const validateForm = () => {
   const newErrors = {
@@ -42,6 +47,7 @@ export default function ProductForm() {
     distributorRate: "",
     retailerRate: "",
     reorderLevel: "",
+    imageUrl: "",
   };
 
   if (!formData.sku.trim()) newErrors.sku = "SKU is required";
@@ -53,6 +59,8 @@ export default function ProductForm() {
   if (!formData.distributorRate) newErrors.distributorRate = "Distributor Rate is required";
   if (!formData.retailerRate) newErrors.retailerRate = "Retailer Rate is required";
   if (!formData.reorderLevel) newErrors.reorderLevel = "Reorder Level is required";
+  if (!formData.imageUrl) { newErrors.imageUrl = "Product image is required";
+}
 
   setErrors(newErrors);
 
@@ -89,8 +97,11 @@ const [imagePreview, setImagePreview] = useState("");
           shelfLifeDays: "",
           trackBatch: true,
           trackMfgDate: true,
+          imageUrl: "",
           isActive: true,
         });
+
+        router.push("/products");
       } else {
         alert("Failed to save product");
       }
@@ -394,11 +405,25 @@ const [imagePreview, setImagePreview] = useState("");
             accept="image/*"
             className="hidden"
             onChange={(e) => {
-                const file = e.target.files?.[0];
+              const file = e.target.files?.[0];
 
-                if (file) {
-                setImagePreview(URL.createObjectURL(file));
-                }
+              if (file) {
+                const imagePath = `/products/${file.name}`;
+
+                setFormData({
+                  ...formData,
+                  imageUrl: imagePath,
+                });
+
+                setImagePreview(
+                  URL.createObjectURL(file)
+                );
+
+                setErrors({
+                  ...errors,
+                  imageUrl: "",
+                });
+              }
             }}
             />
         </label>
@@ -409,6 +434,12 @@ const [imagePreview, setImagePreview] = useState("");
             alt="Preview"
             className="mt-3 w-24 h-24 object-cover border rounded"
             />
+        )}
+
+        {errors.imageUrl && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.imageUrl}
+          </p>
         )}
         </div>
 
@@ -460,12 +491,23 @@ const [imagePreview, setImagePreview] = useState("");
 
       </div>
 
-      <button
-        onClick={saveProduct}
-        className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-      >
-        Save Product
-      </button>
+      <div className="mt-6 flex gap-4">
+        <button
+          type="button"
+          onClick={() => router.push("/products")}
+          className="mt-6 bg-gray-500 text-white px-6 py-2 rounded cursor-pointer"
+        >
+          Back
+        </button>
+
+        <button
+          onClick={saveProduct}
+          className="mt-6 bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:bg-green-700"
+        >
+          Save Product
+        </button>
+      </div>
+
     </div>
   );
 }

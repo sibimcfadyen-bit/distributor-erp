@@ -17,6 +17,34 @@ export default function ProductList() {
     loadProducts();
   }, []);
 
+const disableProduct = async (id: string) => {
+  await fetch(`/api/products/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      isActive: false,
+    }),
+  });
+
+  loadProducts();
+};
+
+const activateProduct = async (id: string) => {
+  await fetch(`/api/products/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      isActive: true,
+    }),
+  });
+
+  loadProducts();
+};
+
 const filteredProducts = products.filter(
   (product) =>
     (product.name ?? "")
@@ -55,6 +83,7 @@ return (
 
         <thead>
           <tr className="bg-gray-100">
+            <th className="border p-2">Image</th>
             <th className="border p-2">SKU</th>
             <th className="border p-2">Product</th>
             <th className="border p-2">HSN</th>
@@ -83,6 +112,17 @@ return (
                 key={product.id}
                 className="hover:bg-gray-50"
               >
+                <td className="border p-2">
+                  {product.imageUrl ? (
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </td>
                 <td className="border p-2">
                   {product.sku ?? "-"}
                 </td>
@@ -122,17 +162,33 @@ return (
                     </span>
                   )}
                 </td>
-                <td className="border p-2 flex gap-2 justify-center">
-                  <Link
-                    href={`/products/edit/${product.id}`}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
-                  >
-                    Edit
-                  </Link>
+                <td className="border p-2">
+                  <div className="flex gap-2 justify-center">
+                    <Link
+                      href={`/products/edit/${product.id}`}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
+                    >
+                      Edit
+                    </Link>
 
-                  <button className="bg-red-500 text-white px-3 py-1 rounded text-sm">
-                    Disable
-                  </button>
+                    {
+                      product.isActive ? (
+                        <button
+                          onClick={() => disableProduct(product.id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Disable
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => activateProduct(product.id)}
+                          className="bg-green-600 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Activate
+                        </button>
+                      )
+                    }
+                  </div>
                 </td>
               </tr>
             ))

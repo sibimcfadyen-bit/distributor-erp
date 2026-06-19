@@ -19,5 +19,7 @@ export interface Product {
   trackBatch: boolean;
   trackMfgDate: boolean;
 
+  imageUrl: string;
+
   isActive: boolean;
 }
