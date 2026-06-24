@@ -7,22 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  SUPER_ADMIN
-  OWNER
-  ACCOUNTANT
-  GODOWN
-  SALESMAN
-  DELIVERY
-}
-
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String   @unique
-  password String
-  role     UserRole
-
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -30,54 +20,48 @@ model User {
 model Route {
   id        String   @id @default(uuid())
   name      String
-
-  isActive  Boolean  @default(true)
-
-  shops     Shop[]
-
   createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+  shops     Shop[]
 }
 
 model Shop {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   shopName  String
   ownerName String
   mobile    String
-
   address   String?
   latitude  Float?
   longitude Float?
-
-  routeId String
-  route   Route  @relation(fields: [routeId], references: [id])
-
+  routeId   String
   createdAt DateTime @default(now())
+  route     Route    @relation(fields: [routeId], references: [id])
 }
 
 model Product {
-  id   String @id @default(uuid())
-  sku  String @unique
-  name String
-
-  hsnCode String
-  gst     Float
-
-  caseSize Int
-
-  mrp             Float
+  id              String   @id @default(uuid())
+  sku             String   @unique
+  name            String
+  gst             Float
+  caseSize        Int
+  createdAt       DateTime @default(now())
   distributorRate Float
+  hsnCode         String
+  isActive        Boolean  @default(true)
+  mrp             Float
+  reorderLevel    Int
   retailerRate    Float
+  shelfLifeDays   Int?
+  trackBatch      Boolean  @default(true)
+  trackMfgDate    Boolean  @default(true)
+  imageUrl        String?
+}
 
-  reorderLevel Int
-
-  shelfLifeDays Int?
-
-  trackBatch   Boolean @default(true)
-  trackMfgDate Boolean @default(true)
-
-  imageUrl String?
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
+enum UserRole {
+  SUPER_ADMIN
+  OWNER
+  ACCOUNTANT
+  GODOWN
+  SALESMAN
+  DELIVERY
 }

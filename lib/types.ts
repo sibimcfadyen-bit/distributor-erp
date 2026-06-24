@@ -23,3 +23,10 @@ export interface Product {
 
   isActive: boolean;
 }
+
+export interface Route {
+  id: string;
+  name: string;
+  isActive: boolean;
+  createdAt: string;
+}
